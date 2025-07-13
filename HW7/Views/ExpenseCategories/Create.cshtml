@@ -1,13 +1,22 @@
-﻿@model HW7.Models.ExpenseCategory
+﻿@model HW7.ViewModels.ExpenseCategoryCreateViewModel
 
-<h2>Create a category</h2>
+@{
+    ViewData["Title"] = "Create Category";
+}
 
-<form asp-action="Create">
+<h2>Create Expense Category</h2>
+
+<form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Save</button>
-    <a asp-action="Index" class="btn btn-secondary mt-2">Back</a>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

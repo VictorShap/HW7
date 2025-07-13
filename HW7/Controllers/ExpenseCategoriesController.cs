@@ -1,6 +1,7 @@
 ﻿using HW7.Data;
 using HW7.Models;
 using HW7.Services;
+using HW7.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -34,14 +35,19 @@ namespace HW7.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ExpenseCategory expenseCategory)
+        public async Task<IActionResult> Create(ExpenseCategoryCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return NotFound();// TODO: change  
+                return View(model);
             }
 
-            await _expenseCategoryService.AddAsync(expenseCategory);
+            var category = new ExpenseCategory
+            {
+                Name = model.Name
+            };
+
+            await _expenseCategoryService.AddAsync(category);
 
             return RedirectToAction(nameof(Index));
         }
