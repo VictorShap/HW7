@@ -1,0 +1,26 @@
+﻿@model IEnumerable<HW7.Models.ExpenseCategory>
+
+<h2>Expense Categories</h2>
+
+<a class="btn btn-primary" asp-controller="ExpenseCategories" asp-action="Create">Add a category</a>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@category.Id">Edit</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
