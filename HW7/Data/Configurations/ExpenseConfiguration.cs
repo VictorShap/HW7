@@ -22,7 +22,7 @@ namespace HW7.Data.Configurations
             builder.HasOne(e => e.ExpenseCategory)
                 .WithMany(c => c.Expenses)
                 .HasForeignKey(e => e.ExpenseCategoryId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -14,11 +14,7 @@ namespace HW7.Controllers
 
         public ExpenseCategoriesController(IExpenseCategoryService expenseCategoryServie)
         {
-            if (expenseCategoryServie == null)
-            {
-                throw new ArgumentNullException(nameof(expenseCategoryServie), "expenseCategoryServie cannot be null");
-            }
-            _expenseCategoryService = expenseCategoryServie;
+            _expenseCategoryService = expenseCategoryServie ?? throw new ArgumentNullException(nameof(expenseCategoryServie), "expenseCategoryServie cannot be null");
         }
 
         public async Task<IActionResult> Index()
@@ -35,7 +31,7 @@ namespace HW7.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ExpenseCategoryCreateViewModel model)
+        public async Task<IActionResult> Create(ExpenseCategoryViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -61,8 +57,34 @@ namespace HW7.Controllers
                 return NotFound();
             }
 
-            return View(category);
+            var viewModel = new ExpenseCategoryViewModel() { Id = id, Name = category.Name };
+
+            return View(viewModel);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, ExpenseCategoryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var category = await _expenseCategoryService.GetByIdAsync(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            category.Name = model.Name;
+
+            await _expenseCategoryService.UpdateAsync(category);
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         public async Task<IActionResult> Delete(int id)
         {

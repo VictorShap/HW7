@@ -16,6 +16,7 @@ namespace HW7
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IExpenseCategoryService, ExpenseCategoryService>();
+            builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
             var app = builder.Build();
 

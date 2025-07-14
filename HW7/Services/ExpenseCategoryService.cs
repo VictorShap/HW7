@@ -10,12 +10,7 @@ namespace HW7.Services
 
         public ExpenseCategoryService(FinanceDbContext dbContext)
         {
-            if (dbContext == null)
-            {
-                throw new ArgumentNullException(nameof(dbContext), "dbContext cannot be null");
-            }
-
-            _context = dbContext;
+            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext), "dbContext cannot be null");
         }
 
         public async Task AddAsync(ExpenseCategory category)
@@ -51,7 +46,7 @@ namespace HW7.Services
 
         public async Task<ExpenseCategory?> GetByIdAsync(int id)
         {
-           return await _context.ExpenseCategories.FindAsync(id);
+            return await _context.ExpenseCategories.FindAsync(id);
         }
 
         public async Task UpdateAsync(ExpenseCategory category)
@@ -62,7 +57,7 @@ namespace HW7.Services
             }
 
             _context.Update(category);
-            await _context.SaveChangesAsync();  
+            await _context.SaveChangesAsync();
         }
     }
 }
