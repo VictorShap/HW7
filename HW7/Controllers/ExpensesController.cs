@@ -19,33 +19,26 @@ namespace HW7.Controllers
 
         public async Task<IActionResult> Index(ExpenseFilterViewModel model)
         {
-            var allExpenses = await _expenseService.GetAllAsync();
-            var filteredExpenses = allExpenses;
-
-            if (model.SelectedCategoryId.HasValue)
-                filteredExpenses = allExpenses.Where(e => e.ExpenseCategoryId == model.SelectedCategoryId.Value).ToList();
-
-            if (model.DateRange.HasValue)
+            var filteredExpenses = await _expenseService.GetFilteredExpensesAsync(new ExpenseFilter()
             {
-                filteredExpenses = allExpenses
-       .Where(e => e.Date >= model.DateRange.Value.startDate && e.Date <= model.DateRange.Value.endDate)
-       .ToList();
-            }
+                Date = model.Date,
+                SelectedCategoryId = model.SelectedCategoryId
+            });
 
             var categories = await _categoryService.GetAllAsync();
 
             var viewModel = new ExpenseFilterViewModel
             {
                 SelectedCategoryId = model.SelectedCategoryId,
-                DateRange = model.DateRange,
+                Date = model.Date,
                 Categories = categories.Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),
                     Text = c.Name
                 }).ToList(),
                 FilteredExpenses = filteredExpenses,
-                TotalAmount = allExpenses.Sum(e => e.Amount),
-                TotalCount = allExpenses.Count
+                TotalAmount = filteredExpenses.Sum(e => e.Amount),
+                TotalCount = filteredExpenses.Count
             };
 
             return View(viewModel);

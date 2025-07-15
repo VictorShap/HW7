@@ -61,16 +61,22 @@ namespace HW7.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Expense>> GetByCategory(ExpenseCategory category)
+       public async Task<List<Expense>> GetFilteredExpensesAsync(ExpenseFilter filter)
         {
-            if (category == null)
-            {
-                throw new ArgumentNullException(nameof(category), "category cannot be null");
-            }
+            var allExpenses = await _context.Expenses.ToListAsync();
+            var filteredExpenses = allExpenses;
 
-            var expenses = await _context.Expenses.Where(e => e.ExpenseCategoryId == category.Id).ToListAsync();
+            if (filter.SelectedCategoryId.HasValue)
+                filteredExpenses = allExpenses.Where(e => e.ExpenseCategoryId == filter.SelectedCategoryId.Value).ToList();
 
-            return expenses;
+            if (filter.Date?.StartDate != null)
+                filteredExpenses = filteredExpenses.Where(e => e.Date >= filter.Date.StartDate.Value).ToList();
+
+            if (filter.Date?.EndDate != null)
+                filteredExpenses = filteredExpenses.Where(e => e.Date <= filter.Date.EndDate.Value).ToList();
+
+            return filteredExpenses;
         }
+
     }
 }

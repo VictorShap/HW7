@@ -6,7 +6,7 @@
 
 <h2>Expense Categories</h2>
 <h3>Click on a category name to view the related expenses </h3>
-<a class="btn btn-primary" asp-controller="ExpenseCategories" asp-action="Create">Add a category</a>
+<a class="btn btn-primary" asp-controller="ExpenseCategories" asp-action="Create">Add Category</a>
 <a class="btn btn-secondary" href="@Url.Action("Index", "Home")">
     Back
 </a>
@@ -22,7 +22,7 @@
         @foreach (var category in Model)
         {
             <tr>
-                <td><a href="@Url.Action("FilterByCategory", "Expenses", category.Id)">@category.Name</a></td>
+                <td><a href="@Url.Action("FilterByCategory", "Expenses", new { categoryId = category.Id })">@category.Name</a></td>
                 <td>
                     <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@category.Id">Edit</a>
                     <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@category.Id">Delete</a>

@@ -9,6 +9,6 @@ namespace HW7.Services
         Task<bool> DeleteAsync(int id);
         Task<Expense>? GetByIdAsync(int id);
         Task UpdateAsync(Expense expense);
-        Task<List<Expense>> GetByCategory(ExpenseCategory category);
+        Task<List<Expense>> GetFilteredExpensesAsync(ExpenseFilter filter);
     }
 }
