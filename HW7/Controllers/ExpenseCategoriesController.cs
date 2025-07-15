@@ -1,11 +1,7 @@
-﻿using HW7.Data;
-using HW7.Models;
+﻿using HW7.Models;
 using HW7.Services;
 using HW7.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-
 namespace HW7.Controllers
 {
     public class ExpenseCategoriesController : Controller
@@ -109,5 +105,21 @@ namespace HW7.Controllers
 
             return NotFound();
         }
-}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForceDelete(int id)
+        {
+           var deleted = await _expenseCategoryService.ForceDeleteAsync(id);
+
+            if (deleted)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["ErrorMessage"] = "Failed to delete category.";
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }

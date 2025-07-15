@@ -10,5 +10,6 @@ namespace HW7.Services
         Task AddAsync(ExpenseCategory category);
         Task UpdateAsync(ExpenseCategory category);
         Task<DeleteCategoryResult> DeleteAsync(int id);
+        Task<bool> ForceDeleteAsync(int id);
     }
 }

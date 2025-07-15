@@ -1,0 +1,27 @@
+﻿@model HW7.ViewModels.MonthlyOverviewViewModel
+
+<h2>Monthly Expense Overview</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Category</th>
+            <th>Expense Count</th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stat in Model.MonthlyStats)
+        {
+            <tr>
+                <td>@stat.MonthName</td>
+                <td>@stat.CategoryName</td>
+                <td>@stat.ExpenseCount</td>
+                <td>@stat.TotalAmount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p><a class="btn btn-secondary" href="@Url.Action("Index", "Home")"> Back </a> </p>
+

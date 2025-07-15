@@ -56,6 +56,21 @@ namespace HW7.Services
             return new DeleteCategoryResult() { Success = true };
         }
 
+        public async Task<bool> ForceDeleteAsync(int id)
+        {
+            var category = await _context.ExpenseCategories.FindAsync(id);
+
+            if (category == null)
+            {
+                return false;
+            }
+
+            _context.Remove(category);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<List<ExpenseCategory>> GetAllAsync()
         {
             return await _context.ExpenseCategories.ToListAsync();

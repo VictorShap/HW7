@@ -1,4 +1,5 @@
 ﻿using HW7.Data;
+using HW7.Exceptions;
 using HW7.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,8 +23,14 @@ namespace HW7.Services
         {
             if (expense == null)
             {
-                throw new ArgumentNullException(nameof(expense), "category cannot be null");
+                throw new ArgumentNullException(nameof(expense), "expense cannot be null");
+            }
 
+            var category = await _context.ExpenseCategories.FindAsync(expense.ExpenseCategoryId);
+
+            if (category == null)
+            {
+                throw new InvalidCategoryException("Such a category doesnt exist");
             }
 
             _context.Expenses.Add(expense);
@@ -61,9 +68,9 @@ namespace HW7.Services
             await _context.SaveChangesAsync();
         }
 
-       public async Task<List<Expense>> GetFilteredExpensesAsync(ExpenseFilter filter)
+        public async Task<List<Expense>> GetFilteredExpensesAsync(ExpenseFilter filter)
         {
-            if(filter == null)
+            if (filter == null)
             {
                 throw new ArgumentNullException(nameof(filter), "filter cannot be null");
             }

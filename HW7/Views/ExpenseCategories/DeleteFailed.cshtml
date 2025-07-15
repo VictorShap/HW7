@@ -28,10 +28,18 @@
                     <td>@expense.Amount</td>
                     <td>@expense.Date.ToShortDateString()</td>
                     <td>@expense.Comment</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-controller="Expenses" asp-action="Edit" asp-route-id="@expense.Id">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-controller="Expenses" asp-action="Delete" asp-route-id="@expense.Id">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 }
-
 <a href="@Url.Action("Index", "ExpenseCategories")" class="btn btn-secondary">Back to Categories</a>
+
+<form asp-action="ForceDelete" asp-controller="ExpenseCategories" method="post">
+    <input type="hidden" name="id" value="@Model.CategoryId" />
+    <button type="submit" class="btn btn-danger">Delete Anyway with the related expenses</button>
+</form>

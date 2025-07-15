@@ -11,24 +11,22 @@ namespace HW7
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<FinanceDbContext>(options =>
-              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection")
+                    ?? throw new InvalidOperationException("Missing DefaultConnection")));
 
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IExpenseCategoryService, ExpenseCategoryService>();
             builder.Services.AddScoped<IExpenseService, ExpenseService>();
+            builder.Services.AddScoped<ISummariesService, SummariesService>();
 
             var app = builder.Build();
 
-            app.MapControllerRoute(
-                 name: "default",
-                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
             app.UseRouting();
             app.UseAuthorization();
-            app.MapControllers();
-            app.MapDefaultControllerRoute();
-            app.MapDefaultControllerRoute();
+
+            app.MapDefaultControllerRoute(); 
 
             app.Run();
         }

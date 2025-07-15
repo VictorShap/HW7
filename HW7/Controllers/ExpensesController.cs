@@ -25,17 +25,11 @@ namespace HW7.Controllers
                 SelectedCategoryIds = model.SelectedCategoryIds
             });
 
-            var categories = await _categoryService.GetAllAsync();
-
             var viewModel = new ExpenseFilterViewModel
             {
                 SelectedCategoryIds = model.SelectedCategoryIds,
                 Date = model.Date,
-                Categories = categories.Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList(),
+                Categories = model.Categories = await GetCategorySelectListAsync(),
                 FilteredExpenses = filteredExpenses,
                 TotalAmount = filteredExpenses.Sum(e => e.Amount),
                 TotalCount = filteredExpenses.Count
@@ -55,15 +49,10 @@ namespace HW7.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var categories = await _categoryService.GetAllAsync();
             var model = new ExpenseViewModel
             {
                 Date = DateTime.Today,
-                Categories = categories.Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList()
+                Categories = await GetCategorySelectListAsync()
             };
 
             return View(model);
@@ -75,11 +64,7 @@ namespace HW7.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = (await _categoryService.GetAllAsync()).Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList();
+                model.Categories = await GetCategorySelectListAsync();
 
                 return View(model);
             }
@@ -124,7 +109,7 @@ namespace HW7.Controllers
                 Amount = expense.Amount,
                 Date = expense.Date,
                 Comment = expense.Comment,
-                ExpenseCategoryId = expense.ExpenseCategoryId.HasValue ? expense.ExpenseCategoryId.Value : -1,
+                ExpenseCategoryId = expense.ExpenseCategoryId ?? -1,
                 Categories = categories.Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),
@@ -175,6 +160,17 @@ namespace HW7.Controllers
             await _expenseService.UpdateAsync(expense);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<List<SelectListItem>> GetCategorySelectListAsync()
+        {
+            var categories = await _categoryService.GetAllAsync();
+
+            return categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            }).ToList();
         }
     }
 }
