@@ -5,7 +5,7 @@ namespace HW7.ViewModels
 {
     public class ExpenseFilterViewModel
     {
-        public int? SelectedCategoryId { get; set; }
+        public List<int> SelectedCategoryIds { get; set; } = new();
         public DateRange? Date { get; set; }
 
         public List<SelectListItem> Categories { get; set; }

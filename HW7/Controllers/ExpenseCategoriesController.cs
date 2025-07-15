@@ -88,15 +88,26 @@ namespace HW7.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            if (await _expenseCategoryService.DeleteAsync(id))
+            var result = await _expenseCategoryService.DeleteAsync(id);
+
+            if (result.Success)
             {
                 return RedirectToAction(nameof(Index));
             }
 
+            if (result.RelatedExpenses?.Any() == true)
+            {
+                var viewModel = new DeleteCategoryFailedViewModel
+                {
+                    CategoryId = id,
+                    ErrorMessage = result.ErrorMessage,
+                    RelatedExpenses = result.RelatedExpenses
+                };
+
+                return View("DeleteFailed", viewModel);
+            }
+
             return NotFound();
         }
-
-
-
-    }
+}
 }

@@ -22,14 +22,14 @@ namespace HW7.Controllers
             var filteredExpenses = await _expenseService.GetFilteredExpensesAsync(new ExpenseFilter()
             {
                 Date = model.Date,
-                SelectedCategoryId = model.SelectedCategoryId
+                SelectedCategoryIds = model.SelectedCategoryIds
             });
 
             var categories = await _categoryService.GetAllAsync();
 
             var viewModel = new ExpenseFilterViewModel
             {
-                SelectedCategoryId = model.SelectedCategoryId,
+                SelectedCategoryIds = model.SelectedCategoryIds,
                 Date = model.Date,
                 Categories = categories.Select(c => new SelectListItem
                 {
@@ -48,7 +48,7 @@ namespace HW7.Controllers
         {
             return RedirectToAction("Index", new ExpenseFilterViewModel()
             {
-                SelectedCategoryId = categoryId
+                SelectedCategoryIds = new List<int> { categoryId }
             });
         }
 

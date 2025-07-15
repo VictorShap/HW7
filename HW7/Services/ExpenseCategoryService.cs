@@ -1,5 +1,6 @@
 ﻿using HW7.Data;
 using HW7.Models;
+using HW7.Models.ServiceResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace HW7.Services
@@ -24,19 +25,35 @@ namespace HW7.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<DeleteCategoryResult> DeleteAsync(int id)
         {
             var category = await _context.ExpenseCategories.FindAsync(id);
 
             if (category == null)
             {
-                return false;
+                return new DeleteCategoryResult()
+                {
+                    Success = false,
+                    ErrorMessage = "Expense category was not found"
+                };
+            }
+
+            var relatedExpenses = await _context.Expenses.Where(x => x.ExpenseCategoryId == id).ToListAsync();
+
+            if (relatedExpenses.Any())
+            {
+                return new DeleteCategoryResult()
+                {
+                    Success = false,
+                    RelatedExpenses = relatedExpenses,
+                    ErrorMessage = "There are related expenses to this category"
+                };
             }
 
             _context.Remove(category);
             await _context.SaveChangesAsync();
 
-            return true;
+            return new DeleteCategoryResult() { Success = true };
         }
 
         public async Task<List<ExpenseCategory>> GetAllAsync()

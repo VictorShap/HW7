@@ -9,7 +9,7 @@
 <form method="get" asp-action="Index">
     <div class="form-group">
         <label for="SelectedCategoryId">Category</label>
-        <select asp-for="SelectedCategoryId" asp-items="Model.Categories" class="form-control">
+        <select asp-for="SelectedCategoryIds" asp-items="Model.Categories" multiple="multiple" class="form-control">
             <option value="">-- All Categories --</option>
         </select>
     </div>

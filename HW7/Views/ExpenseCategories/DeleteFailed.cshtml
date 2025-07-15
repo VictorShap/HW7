@@ -1,0 +1,37 @@
+﻿@model HW7.ViewModels.DeleteCategoryFailedViewModel
+
+@{
+    ViewData["Title"] = "Cannot Delete Category";
+}
+
+<h2>Cannot Delete Category</h2>
+
+<div class="alert alert-danger">
+    <strong>@Model.ErrorMessage</strong>
+</div>
+
+@if (Model.RelatedExpenses.Any())
+{
+    <p>This category is used in the following expenses:</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in Model.RelatedExpenses)
+            {
+                <tr>
+                    <td>@expense.Amount</td>
+                    <td>@expense.Date.ToShortDateString()</td>
+                    <td>@expense.Comment</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a href="@Url.Action("Index", "ExpenseCategories")" class="btn btn-secondary">Back to Categories</a>

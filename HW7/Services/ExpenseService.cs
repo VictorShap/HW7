@@ -63,19 +63,29 @@ namespace HW7.Services
 
        public async Task<List<Expense>> GetFilteredExpensesAsync(ExpenseFilter filter)
         {
-            var allExpenses = await _context.Expenses.ToListAsync();
-            var filteredExpenses = allExpenses;
+            if(filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter), "filter cannot be null");
+            }
 
-            if (filter.SelectedCategoryId.HasValue)
-                filteredExpenses = allExpenses.Where(e => e.ExpenseCategoryId == filter.SelectedCategoryId.Value).ToList();
+            var query = _context.Expenses.AsQueryable();
 
-            if (filter.Date?.StartDate != null)
-                filteredExpenses = filteredExpenses.Where(e => e.Date >= filter.Date.StartDate.Value).ToList();
+            if (filter?.SelectedCategoryIds != null && filter.SelectedCategoryIds.Any())
+            {
+                query = query.Where(e => filter.SelectedCategoryIds.Contains(e.ExpenseCategoryId.Value));
+            }
 
-            if (filter.Date?.EndDate != null)
-                filteredExpenses = filteredExpenses.Where(e => e.Date <= filter.Date.EndDate.Value).ToList();
+            if (filter.Date != null && filter.Date.StartDate.HasValue)
+            {
+                query = query.Where(e => e.Date >= filter.Date.StartDate.Value);
+            }
 
-            return filteredExpenses;
+            if (filter.Date != null && filter.Date.EndDate.HasValue)
+            {
+                query = query.Where(e => e.Date <= filter.Date.EndDate.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
     }
