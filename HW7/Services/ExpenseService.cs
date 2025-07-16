@@ -79,7 +79,7 @@ namespace HW7.Services
 
             if (filter?.SelectedCategoryIds != null && filter.SelectedCategoryIds.Any())
             {
-                query = query.Where(e => filter.SelectedCategoryIds.Contains(e.ExpenseCategoryId.Value));
+                query = query.Where(e => filter.SelectedCategoryIds.Contains(e.ExpenseCategoryId));
             }
 
             if (filter.Date != null && filter.Date.StartDate.HasValue)

@@ -76,6 +76,12 @@ namespace HW7.Services
             return await _context.ExpenseCategories.ToListAsync();
         }
 
+        public async Task<List<ExpenseCategory>> GetAllAsync(string id)
+        {
+            return await _context.ExpenseCategories.Where(c => (c.UserId == id) || c.isSystem)
+                .ToListAsync();
+        }
+
         public async Task<ExpenseCategory?> GetByIdAsync(int id)
         {
             return await _context.ExpenseCategories.FindAsync(id);

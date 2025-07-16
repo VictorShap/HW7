@@ -1,6 +1,7 @@
 ﻿using HW7.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace HW7.Data.Configurations
 {
@@ -14,7 +15,7 @@ namespace HW7.Data.Configurations
                 .HasMaxLength(100);
 
             builder.Property(e => e.Amount)
-                .IsRequired();
+            .HasPrecision(18, 2);
 
             builder.Property(e => e.Date)
                 .IsRequired();
@@ -22,7 +23,12 @@ namespace HW7.Data.Configurations
             builder.HasOne(e => e.ExpenseCategory)
                 .WithMany(c => c.Expenses)
                 .HasForeignKey(e => e.ExpenseCategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(e => e.User)
+               .WithMany(u => u.Expenses)
+               .HasForeignKey(e => e.UserId)
+               .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

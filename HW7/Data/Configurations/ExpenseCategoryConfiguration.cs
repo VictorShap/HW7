@@ -15,12 +15,21 @@ namespace HW7.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
+            builder.Property(c => c.isSystem)
+              .IsRequired();
+
+            builder.HasOne(c => c.User)
+           .WithMany(u => u.ExpenseCategories)
+           .HasForeignKey(c => c.UserId)
+           .OnDelete(DeleteBehavior.SetNull) 
+           .IsRequired(false);
+
             builder.HasData(
-           new ExpenseCategory { Id = 1, Name = "Food" },
-           new ExpenseCategory { Id = 2, Name = "Transport" },
-           new ExpenseCategory { Id = 3, Name = "Cellular communication" },
-           new ExpenseCategory { Id = 4, Name = "Internet" },
-           new ExpenseCategory { Id = 5, Name = "Entertainment" }
+           new ExpenseCategory { Id = 1, Name = "Food", isSystem = true },
+           new ExpenseCategory { Id = 2, Name = "Transport", isSystem = true },
+           new ExpenseCategory { Id = 3, Name = "Cellular communication", isSystem = true },
+           new ExpenseCategory { Id = 4, Name = "Internet", isSystem = true },
+           new ExpenseCategory { Id = 5, Name = "Entertainment", isSystem = true }
        );
         }
     }

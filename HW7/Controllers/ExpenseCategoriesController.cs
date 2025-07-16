@@ -15,7 +15,14 @@ namespace HW7.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var catagories = await _expenseCategoryService.GetAllAsync();
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var catagories = await _expenseCategoryService.GetAllAsync(userId);
 
             return View(catagories);
         }

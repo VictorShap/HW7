@@ -109,7 +109,7 @@ namespace HW7.Controllers
                 Amount = expense.Amount,
                 Date = expense.Date,
                 Comment = expense.Comment,
-                ExpenseCategoryId = expense.ExpenseCategoryId ?? -1,
+                ExpenseCategoryId = expense.ExpenseCategoryId,
                 Categories = categories.Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),

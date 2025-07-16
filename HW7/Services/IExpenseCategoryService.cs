@@ -6,6 +6,7 @@ namespace HW7.Services
     public interface IExpenseCategoryService
     {
         Task<List<ExpenseCategory>> GetAllAsync();
+        Task<List<ExpenseCategory>> GetAllAsync(string id);
         Task<ExpenseCategory?> GetByIdAsync(int id);
         Task AddAsync(ExpenseCategory category);
         Task UpdateAsync(ExpenseCategory category);
