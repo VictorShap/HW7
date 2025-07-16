@@ -15,11 +15,8 @@ namespace HW7.Services
 
         public async Task<MonthlyOverviewViewModel> GetMonthlyOverviewAsync()
         {
-            var expenses = await _context.Expenses
+            var monthlyStats = await _context.Expenses
                 .Include(e => e.ExpenseCategory)
-                .ToListAsync();
-
-            var monthlyStats = expenses
                 .GroupBy(e => new { e.Date.Year, e.Date.Month, e.ExpenseCategory.Name })
                 .OrderBy(g => g.Key.Year)
                 .ThenBy(g => g.Key.Month)
@@ -30,7 +27,7 @@ namespace HW7.Services
                     ExpenseCount = g.Count(),
                     TotalAmount = g.Sum(e => e.Amount)
                 })
-                .ToList();
+                .ToListAsync();
 
             return new MonthlyOverviewViewModel
             {

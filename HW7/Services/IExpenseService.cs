@@ -7,7 +7,7 @@ namespace HW7.Services
         Task<List<Expense>> GetAllAsync();
         Task AddAsync(Expense expense);
         Task<bool> DeleteAsync(int id);
-        Task<Expense>? GetByIdAsync(int id);
+        Task<Expense?> GetByIdAsync(int id);
         Task UpdateAsync(Expense expense);
         Task<List<Expense>> GetFilteredExpensesAsync(ExpenseFilter filter);
     }

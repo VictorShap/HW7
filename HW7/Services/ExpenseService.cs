@@ -39,7 +39,7 @@ namespace HW7.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var expense = await _context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
+            var expense = await _context.Expenses.FindAsync(id);
 
             if (expense != null)
             {
@@ -52,9 +52,9 @@ namespace HW7.Services
             return false;
         }
 
-        public async Task<Expense>? GetByIdAsync(int id)
+        public async Task<Expense?> GetByIdAsync(int id)
         {
-            return await _context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
+            return await _context.Expenses.FindAsync(id);
         }
 
         public async Task UpdateAsync(Expense expense)
@@ -62,6 +62,13 @@ namespace HW7.Services
             if (expense == null)
             {
                 throw new ArgumentNullException(nameof(expense), "category cannot be null");
+            }
+
+            var category = await _context.ExpenseCategories.FindAsync(expense.ExpenseCategoryId);
+
+            if (category == null)
+            {
+                throw new InvalidCategoryException("Such a category doesnt exist");
             }
 
             _context.Update(expense);
@@ -77,19 +84,22 @@ namespace HW7.Services
 
             var query = _context.Expenses.AsQueryable();
 
-            if (filter?.SelectedCategoryIds != null && filter.SelectedCategoryIds.Any())
+            if (filter.SelectedCategoryIds != null && filter.SelectedCategoryIds.Any())
             {
-                query = query.Where(e => filter.SelectedCategoryIds.Contains(e.ExpenseCategoryId.Value));
+                query = query.Where(e => filter.SelectedCategoryIds.Contains(e.ExpenseCategoryId));
             }
 
-            if (filter.Date != null && filter.Date.StartDate.HasValue)
+            if (filter.Date != null)
             {
-                query = query.Where(e => e.Date >= filter.Date.StartDate.Value);
-            }
+                if (filter.Date.StartDate.HasValue)
+                {
+                    query = query.Where(e => e.Date >= filter.Date.StartDate.Value);
+                }
+                if (filter.Date.EndDate.HasValue)
+                {
+                    query = query.Where(e => e.Date <= filter.Date.EndDate.Value);
+                }
 
-            if (filter.Date != null && filter.Date.EndDate.HasValue)
-            {
-                query = query.Where(e => e.Date <= filter.Date.EndDate.Value);
             }
 
             return await query.ToListAsync();

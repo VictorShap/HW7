@@ -27,27 +27,18 @@ namespace HW7.Services
 
         public async Task<DeleteCategoryResult> DeleteAsync(int id)
         {
-            var category = await _context.ExpenseCategories.FindAsync(id);
+            var category = await _context.ExpenseCategories
+             .Include(c => c.Expenses)
+             .FirstOrDefaultAsync(c => c.Id == id);
 
             if (category == null)
             {
-                return new DeleteCategoryResult()
-                {
-                    Success = false,
-                    ErrorMessage = "Expense category was not found"
-                };
+                return new DeleteCategoryResult { Success = false, ErrorMessage = "Expense category was not found" };
             }
 
-            var relatedExpenses = await _context.Expenses.Where(x => x.ExpenseCategoryId == id).ToListAsync();
-
-            if (relatedExpenses.Any())
+            if (category.Expenses.Any())
             {
-                return new DeleteCategoryResult()
-                {
-                    Success = false,
-                    RelatedExpenses = relatedExpenses,
-                    ErrorMessage = "There are related expenses to this category"
-                };
+                return new DeleteCategoryResult { Success = false, RelatedExpenses = category.Expenses.ToList(), ErrorMessage = "There are related expenses to this category" };
             }
 
             _context.Remove(category);

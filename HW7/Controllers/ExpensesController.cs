@@ -101,20 +101,14 @@ namespace HW7.Controllers
                 return NotFound();
             }
 
-            var categories = await _categoryService.GetAllAsync();
-
             var viewModel = new ExpenseViewModel
             {
                 Id = expense.Id,
                 Amount = expense.Amount,
                 Date = expense.Date,
                 Comment = expense.Comment,
-                ExpenseCategoryId = expense.ExpenseCategoryId ?? -1,
-                Categories = categories.Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList()
+                ExpenseCategoryId = expense.ExpenseCategoryId,
+                Categories = await GetCategorySelectListAsync()
             };
 
             return View(viewModel);
